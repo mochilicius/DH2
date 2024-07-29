@@ -19730,4 +19730,16 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 		gen: 5,
 	},
+	generalkillpain: {
+        num: -666,
+        name: "General Kill Pain",
+        types: ["Dark", "Fighting"],
+        baseStats: {hp: 75, atk: 120, def: 95, spa: 75, spd: 80, spe: 110},
+        abilities: {0: "Tinted Lens", 1: "Intimidate"},
+        heightm: 2.3,
+        weightkg: 90,
+        color: "White",
+        eggGroups: ["Nondiscovered"],
+        gen: 9,
+    },
 };
