@@ -6069,7 +6069,8 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "Illegal",
 	},
 	generalkillpain: {
-        isNonstandard: "CAP",
-        tier:"CAP",
+		tier: "OU",
+		doublesTier: "(DUU)",
+		natDexTier: "UU",
     },
 };
