@@ -19731,7 +19731,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		gen: 5,
 	},
 	generalkillpain: {
-        num: -666,
+        num: 1026,
         name: "General Kill Pain",
         types: ["Dark", "Fighting"],
         baseStats: {hp: 75, atk: 120, def: 95, spa: 75, spd: 80, spe: 110},
