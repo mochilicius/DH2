@@ -6070,7 +6070,6 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 	},
 	generalkillpain: {
 		tier: "OU",
-		doublesTier: "(DUU)",
-		natDexTier: "UU",
+		natDexTier: "OU",
     },
 };
