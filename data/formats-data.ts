@@ -6069,7 +6069,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "Illegal",
 	},
 	generalkillpain: {
+		isNonstandard: "Custom",
 		tier: "OU",
-		natDexTier: "OU",
     },
 };
