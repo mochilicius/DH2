@@ -6076,4 +6076,8 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		isNonstandard: "Custom",
 		tier: "OU",
     },
+	poopotron8: {
+		isNonstandard: "Custom",
+		tier: "OU",
+    },
 };
