@@ -132,6 +132,14 @@ export const Formats: FormatList = [
 		},
 	},
 	{
+		name: "[Gen 9] Pokémon Awesome",
+		desc: `Pokémon Awesome baby`,
+		threads: [],
+		mod: 'awesome',
+		ruleset: ['Standard'],
+		banlist: ['Uber', 'Arena Trap', 'Sand Veil', 'Quick Claw', 'Soul Dew', 'Baton Pass'],
+	},
+	{
         name: "[Gen 9] Gen 9 Blindsided",
         desc: `<b>[Gen 9] Blindsided</b>: the monkey has awoken`,
         threads: [
