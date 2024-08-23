@@ -6068,16 +6068,4 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		isNonstandard: "Custom",
 		tier: "Illegal",
 	},
-	generalkillpain: {
-		isNonstandard: "Custom",
-		tier: "OU",
-    },
-	drpoopyfart: {
-		isNonstandard: "Custom",
-		tier: "OU",
-    },
-	poopotron8: {
-		isNonstandard: "Custom",
-		tier: "OU",
-    },
 };
