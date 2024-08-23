@@ -132,8 +132,8 @@ export const Formats: FormatList = [
 		},
 	},
 	{
-		name: "[Gen 9] Pokémon Awesome",
-		desc: `Pokémon Awesome baby`,
+		name: "[Gen 9] Pokemon Awesome",
+		desc: `Pokemon Awesome baby`,
 		threads: [],
 		mod: 'awesome',
 		ruleset: ['Standard'],
