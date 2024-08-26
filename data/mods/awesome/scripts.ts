@@ -1,3 +1,13 @@
-export const Scripts: BattleScriptsData = {
-	gen: 9,
-};
+export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
+    teambuilderConfig: {
+        // for micrometas to only show custom tiers
+        excludeStandardTiers: true,
+        // only to specify the order of custom tiers
+        customTiers: ['Awesome'],
+        customDoublesTiers: ['Doubles Awesome'],
+    },
+    
+    init: function () {
+        
+    },
+};```

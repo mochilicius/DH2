@@ -1,14 +1,14 @@
 export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 	generalkillpain: {
 		tier: "Awesome",
-		doublesTier: "Awesome",
+		doublesTier: "Doubles Awesome",
 	},
 	drpoopyfart: {
-		tier: "Alternatium",
-		doublesTier: "Awesome",
+		tier: "Awesome",
+		doublesTier: "Doubles Awesome",
 	},
 	poopotron8: {
 		tier: "Awesome",
-		doublesTier: "Awesome",
+		doublesTier: "Doubles Awesome",
 	},
 };
