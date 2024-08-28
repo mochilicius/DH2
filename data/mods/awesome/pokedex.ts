@@ -1,10 +1,10 @@
-export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
+export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	generalkillpain: {
         num: -5016,
         name: "General Kill Pain",
         types: ["Dark", "Fighting"],
         baseStats: {hp: 75, atk: 120, def: 95, spa: 75, spd: 80, spe: 110},
-        abilities: {0: "Tinted Lens", 1: "Intimidate"},
+        abilities: {0: "Tinted Lens", H: "Intimidate"},
         heightm: 2.3,
         weightkg: 85,
         color: "Brown",
