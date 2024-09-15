@@ -36,6 +36,7 @@ export const Learnsets: { [speciesid: string]: LearnsetData; } = {
             machpunch: ["9M", "9L56", "9S0"],
             venoshock: ["9M"],
             zenheadbutt: ["9L8"],
+            crackshot: ["9L8"],
         },
     },
 	drpoopyfart: {
