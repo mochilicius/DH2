@@ -16442,6 +16442,22 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Fire",
 		contestType: "Cool",
 	},
+	searingsalvo: {
+		num: 921,
+		accuracy: 95,
+		basePower: 25,
+		category: "Physical",
+		name: "Searing Salvo",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		multihit: [2, 5],
+		secondary: null,
+		shortDesc: "Hits 2-5 times in one turn.",
+		target: "normal",
+		type: "Fire",
+		contestType: "Cool",
+	},
 	searingsunrazesmash: {
 		num: 724,
 		accuracy: true,
@@ -16785,6 +16801,51 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 		},
 		selfSwitch: 'shedtail',
+		secondary: null,
+		target: "self",
+		type: "Normal",
+		zMove: {effect: 'clearnegativeboost'},
+	},
+	tacticalreinforcement: {
+		num: 925,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Tactical Reinforcement",
+		pp: 10,
+		priority: 0,
+		flags: {heal: 1, metronome: 1},
+		volatileStatus: 'substitute',
+		onTryHit(source) {
+			if (source.volatiles['substitute']) {
+				this.add('-fail', source, 'move: Shed Tail');
+				return this.NOT_FAIL;
+			}
+			if (source.hp <= Math.ceil(source.maxhp / 2)) {
+				this.add('-fail', source, 'move: Shed Tail', '[weak]');
+				return this.NOT_FAIL;
+			}
+		},
+		onHit(target) {
+			this.directDamage(Math.ceil(target.maxhp / 2));
+		},
+		slotCondition: 'Wish',
+		condition: {
+			duration: 3,
+			onStart(pokemon, source) {
+				this.effectState.hp = source.maxhp / 2;
+			},
+			onResidualOrder: 4,
+			onEnd(target) {
+				if (target && !target.fainted) {
+					const damage = this.heal(this.effectState.hp, target, target);
+					if (damage) {
+						this.add('-heal', target, target.getHealth, '[from] move: Tactical Reinforcement', '[wisher] ' + this.effectState.source.name);
+					}
+				}
+			},
+		},
+		shortDesc: "Lose 1/2 HP to create a Substitute and Wish.",
 		secondary: null,
 		target: "self",
 		type: "Normal",
@@ -20967,6 +21028,61 @@ export const Moves: {[moveid: string]: MoveData} = {
 		target: "normal",
 		type: "Bug",
 		contestType: "Cute",
+	},
+	retreat: {
+		num: 922,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		name: "Retreat",
+		pp: 20,
+		priority: 0,
+		flags: {mirror: 1, metronome: 1},
+		selfSwitch: true,
+		secondary: null,
+		shortDesc: "User switches out.",
+		target: "self",
+		type: "Normal",
+		contestType: "Cute",
+	},
+	machinegun: {
+		num: 923,
+		accuracy: 95,
+		basePower: 100,
+		category: "Special",
+		name: "Machine Gun",
+		pp: 10,
+		flags: {protect: 1, mirror: 1, distance: 1, nonsky: 1, metronome: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			return typeMod + this.dex.getEffectiveness('Steel', type);
+		},
+		priority: 0,
+		secondary: null,
+		shortDesc: "Combines Steel in its type effectiveness.",
+		target: "normal",
+		type: "Dark",
+		contestType: "Tough",
+	},
+	fireachinesedragonlikeaprojectile: {
+		num: 924,
+		accuracy: 90,
+		basePower: 120,
+		category: "Physical",
+		name: "Fire A Chinese Dragon Like A Projectile",
+		pp: 10,
+		flags: {protect: 1, mirror: 1, metronome: 1, punch: 1},
+		self: {
+			boosts: {
+				spa: -1,
+				spe: -1,
+			},
+		},
+		priority: 0,
+		secondary: null,
+		shortDesc: "Hits adjacent targets. Lowers user's Spe/SpA by 1.",
+		target: "allAdjacentFoes",
+		type: "Dark",
+		contestType: "Tough",
 	},
 	upperhand: {
 		num: 918,

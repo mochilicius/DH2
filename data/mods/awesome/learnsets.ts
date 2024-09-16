@@ -37,6 +37,8 @@ export const Learnsets: { [speciesid: string]: LearnsetData; } = {
             venoshock: ["9M"],
             zenheadbutt: ["9L8"],
             crackshot: ["9L8"],
+            machinegun: ["9L8"],
+            retreat: ["9L8"],
         },
     },
 	drpoopyfart: {
@@ -76,6 +78,9 @@ export const Learnsets: { [speciesid: string]: LearnsetData; } = {
             spite: ["9M", "9L56", "9S0"],
             venoshock: ["9M"],
             knockoff: ["9L8"],
+            fireachinesedragonlikeaprojectile: ["9L31"],
+            tacticalreinforcement: ["9L8"],
+            retreat: ["9L8"],
         },
     },
 	poopotron8: {
