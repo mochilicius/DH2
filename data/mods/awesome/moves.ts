@@ -3219,7 +3219,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {bypasssub: 1, mirror: 1, metronome: 1},
 		critRatio: 3,
-		shortDesc: "Very high crit chance. Breaks Protect and ignores Substitute.",
+		shortDesc: "Very high crit chance. Bypasses Protect and Substitute.",
 		secondary: null,
 		breaksProtect: true,
 		target: "normal",
