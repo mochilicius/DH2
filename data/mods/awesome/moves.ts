@@ -16831,7 +16831,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		slotCondition: 'Wish',
 		condition: {
-			duration: 2,
+			duration: 3,
 			onStart(pokemon, source) {
 				this.effectState.hp = source.maxhp / 2;
 			},
@@ -16845,7 +16845,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			},
 		},
-		shortDesc: "Lose 50% max HP to create a Substitute. User makes a Wish.",
+		shortDesc: "Lose 1/2 HP to create a Substitute and Wish.",
 		secondary: null,
 		target: "self",
 		type: "Normal",
@@ -21067,10 +21067,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		num: 924,
 		accuracy: 90,
 		basePower: 120,
-		category: "Special",
+		category: "Physical",
 		name: "Fire A Chinese Dragon Like A Projectile",
 		pp: 10,
-		flags: {protect: 1, mirror: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1, punch: 1},
 		self: {
 			boosts: {
 				spa: -1,

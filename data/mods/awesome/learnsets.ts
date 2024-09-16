@@ -80,6 +80,7 @@ export const Learnsets: { [speciesid: string]: LearnsetData; } = {
             knockoff: ["9L8"],
             fireachinesedragonlikeaprojectile: ["9L31"],
             tacticalreinforcement: ["9L8"],
+            retreat: ["9L8"],
         },
     },
 	poopotron8: {
