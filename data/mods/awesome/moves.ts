@@ -16814,7 +16814,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Tactical Reinforcement",
 		pp: 10,
 		priority: 0,
-		flags: {},
+		flags: {heal: 1, metronome: 1},
 		volatileStatus: 'substitute',
 		onTryHit(source) {
 			if (source.volatiles['substitute']) {
@@ -16829,6 +16829,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onHit(target) {
 			this.directDamage(Math.ceil(target.maxhp / 2));
 		},
+		slotCondition: 'Wish',
 		condition: {
 			duration: 2,
 			onStart(pokemon, source) {
@@ -16839,11 +16840,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (target && !target.fainted) {
 					const damage = this.heal(this.effectState.hp, target, target);
 					if (damage) {
-						this.add('-heal', target, target.getHealth, '[from] move: Wish', '[wisher] ' + this.effectState.source.name);
+						this.add('-heal', target, target.getHealth, '[from] move: Tactical Reinforcement', '[wisher] ' + this.effectState.source.name);
 					}
 				}
 			},
 		},
+		shortDesc: "Lose 50% max HP to create a Substitute. User makes a Wish.",
 		secondary: null,
 		target: "self",
 		type: "Normal",
@@ -21031,7 +21033,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		num: 922,
 		accuracy: 100,
 		basePower: 0,
-		category: "Physical",
+		category: "Status",
 		name: "Retreat",
 		pp: 20,
 		priority: 0,
@@ -21047,17 +21049,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		num: 923,
 		accuracy: 95,
 		basePower: 100,
-		category: "Physical",
+		category: "Special",
 		name: "Machine Gun",
 		pp: 10,
-		flags: {contact: 1, protect: 1, mirror: 1, distance: 1, nonsky: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, distance: 1, nonsky: 1, metronome: 1},
 		onEffectiveness(typeMod, target, type, move) {
 			return typeMod + this.dex.getEffectiveness('Steel', type);
 		},
 		priority: 0,
 		secondary: null,
-		shortDesc: "This move combines Steel in its type effectiveness against the target.",
-		target: "self",
+		shortDesc: "Combines Steel in its type effectiveness.",
+		target: "normal",
 		type: "Dark",
 		contestType: "Tough",
 	},
@@ -21077,7 +21079,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		priority: 0,
 		secondary: null,
-		shortDesc: "Hits adjacent targets. Lowers the user's Speed and Special Attack by 1.",
+		shortDesc: "Hits adjacent targets. Lowers user's Spe/SpA by 1.",
 		target: "allAdjacentFoes",
 		type: "Dark",
 		contestType: "Tough",
