@@ -15,4 +15,8 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Awesome",
 		doublesTier: "Doubles Awesome",
 	},
+	loggyfriend: {
+		tier: "Illegal",
+		doublesTier: "Illegal",
+	},
 };
