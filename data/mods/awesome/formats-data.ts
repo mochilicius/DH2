@@ -11,4 +11,8 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Awesome",
 		doublesTier: "Doubles Awesome",
 	},
+	loggy: {
+		tier: "Awesome",
+		doublesTier: "Doubles Awesome",
+	},
 };
