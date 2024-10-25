@@ -1,10 +1,7 @@
 export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
-    teambuilderConfig: {
-        customTiers: ['Awesome'],
+	gen: 9,
+	teambuilderConfig: {
+		customTiers: ['Awesome'],
         customDoublesTiers: ['Doubles Awesome'],
-    },
-    
-    init: function () {
-        
-    },
+	},
 };
