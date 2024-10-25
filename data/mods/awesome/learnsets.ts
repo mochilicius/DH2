@@ -129,7 +129,7 @@ export const Learnsets: { [speciesid: string]: LearnsetData; } = {
             seedbomb: ["9M"],
             flamecharge: ["9L1"],
             lockon: ["9L16"],
-            helpinghandm: ["9M"],
+            helpinghand: ["9M"],
             flatter: ["9M", "9L24"],
             knockoff: ["9M"],
             disable: ["9M"],

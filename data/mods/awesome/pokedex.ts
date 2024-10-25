@@ -62,6 +62,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
         color: "Brown",
         requiredAbility: "Friend Inside Me",    
         eggGroups: ["Undiscovered"],
+        battleOnly: ["Loggy"],
         gen: 9,
     },
 };
