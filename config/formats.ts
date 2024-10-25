@@ -136,7 +136,7 @@ export const Formats: FormatList = [
 		desc: `Pokemon Awesome baby`,
 		threads: [],
 		mod: 'awesome',
-		ruleset: ['Standard'],
+		ruleset: ['Standard', 'Data Mod'],
 		banlist: ['Uber', 'Arena Trap', 'Sand Veil', 'Quick Claw', 'Soul Dew', 'Baton Pass'],
 	},
 	{
