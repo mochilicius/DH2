@@ -3202,7 +3202,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Crabhammer",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, hammer: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -4269,7 +4269,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Dragon Hammer",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, hammer: 1},
 		secondary: null,
 		target: "normal",
 		type: "Dragon",
@@ -6789,7 +6789,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Gigaton Hammer",
 		pp: 5,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1, hammer: 1},
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -8342,7 +8342,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Hammer Arm",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, punch: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, punch: 1, metronome: 1, hammer: 1},
 		self: {
 			boosts: {
 				spe: -1,
@@ -9664,7 +9664,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Ice Hammer",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, punch: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, punch: 1, metronome: 1, hammer: 1},
 		self: {
 			boosts: {
 				spe: -1,
@@ -16789,51 +16789,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Normal",
 		zMove: {effect: 'clearnegativeboost'},
 	},
-	tacticalreinforcement: {
-		num: 925,
-		accuracy: true,
-		basePower: 0,
-		category: "Status",
-		name: "Tactical Reinforcement",
-		pp: 10,
-		priority: 0,
-		flags: {heal: 1, metronome: 1},
-		volatileStatus: 'substitute',
-		onTryHit(source) {
-			if (source.volatiles['substitute']) {
-				this.add('-fail', source, 'move: Shed Tail');
-				return this.NOT_FAIL;
-			}
-			if (source.hp <= Math.ceil(source.maxhp / 2)) {
-				this.add('-fail', source, 'move: Shed Tail', '[weak]');
-				return this.NOT_FAIL;
-			}
-		},
-		onHit(target) {
-			this.directDamage(Math.ceil(target.maxhp / 2));
-		},
-		slotCondition: 'Wish',
-		condition: {
-			duration: 3,
-			onStart(pokemon, source) {
-				this.effectState.hp = source.maxhp / 2;
-			},
-			onResidualOrder: 4,
-			onEnd(target) {
-				if (target && !target.fainted) {
-					const damage = this.heal(this.effectState.hp, target, target);
-					if (damage) {
-						this.add('-heal', target, target.getHealth, '[from] move: Tactical Reinforcement', '[wisher] ' + this.effectState.source.name);
-					}
-				}
-			},
-		},
-		shortDesc: "Lose 1/2 HP to create a Substitute and Wish.",
-		secondary: null,
-		target: "self",
-		type: "Normal",
-		zMove: {effect: 'clearnegativeboost'},
-	},
 	sheercold: {
 		num: 329,
 		accuracy: 30,
@@ -21863,7 +21818,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Wood Hammer",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, hammer: 1},
 		recoil: [33, 100],
 		secondary: null,
 		target: "normal",
@@ -22167,10 +22122,124 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, slicing: 1},
-		recoil: [33, 100],
+		recoil: [25, 100],
 		secondary: null,
+		shortDesc: "Has 25% recoil. Slicing move.",
 		target: "normal",
 		type: "Ghost",
 		contestType: "Tough",
 	},
+	tacticalreinforcement: {
+		num: 926,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Tactical Reinforcement",
+		pp: 10,
+		priority: 0,
+		flags: {heal: 1, metronome: 1},
+		volatileStatus: 'substitute',
+		onTryHit(source) {
+			if (source.volatiles['substitute']) {
+				this.add('-fail', source, 'move: Shed Tail');
+				return this.NOT_FAIL;
+			}
+			if (source.hp <= Math.ceil(source.maxhp / 2)) {
+				this.add('-fail', source, 'move: Shed Tail', '[weak]');
+				return this.NOT_FAIL;
+			}
+		},
+		onHit(target) {
+			this.directDamage(Math.ceil(target.maxhp / 2));
+		},
+		slotCondition: 'Wish',
+		condition: {
+			duration: 3,
+			onStart(pokemon, source) {
+				this.effectState.hp = source.maxhp / 2;
+			},
+			onResidualOrder: 4,
+			onEnd(target) {
+				if (target && !target.fainted) {
+					const damage = this.heal(this.effectState.hp, target, target);
+					if (damage) {
+						this.add('-heal', target, target.getHealth, '[from] move: Tactical Reinforcement', '[wisher] ' + this.effectState.source.name);
+					}
+				}
+			},
+		},
+		shortDesc: "Lose 1/2 HP to create a Substitute and Wish.",
+		secondary: null,
+		target: "self",
+		type: "Normal",
+		zMove: {effect: 'clearnegativeboost'},
+	},	
+	superdededejump: {
+		num: 927,
+		accuracy: 95,
+		basePower: 135,
+		category: "Physical",
+		name: "Super Dedede Jump",
+		pp: 5,
+		priority: 0,
+		flags: {
+			contact: 1, charge: 1, protect: 1, mirror: 1, gravity: 1, distance: 1,
+			metronome: 1,
+		},
+		onTryMove(attacker, defender, move) {
+			if (attacker.removeVolatile(move.id)) {
+				return;
+			}
+			this.add('-prepare', attacker, move.name);
+			if (!this.runEvent('ChargeMove', attacker, defender, move)) {
+				return;
+			}
+			attacker.addVolatile('twoturnmove', defender);
+			return null;
+		},
+		condition: {
+			duration: 2,
+			onInvulnerability(target, source, move) {
+				if (['gust', 'twister', 'skyuppercut', 'thunder', 'hurricane', 'smackdown', 'thousandarrows'].includes(move.id)) {
+					return;
+				}
+				return false;
+			},
+			onSourceModifyDamage(damage, source, target, move) {
+				if (move.id === 'gust' || move.id === 'twister') {
+					return this.chainModify(2);
+				}
+			},
+		},
+		secondary: null,
+		target: "allAdjacentFoes",	
+		shortDesc: "Works like Fly. Hits adjacent foes.",		
+		type: "Flying",
+		contestType: "Clever",
+	},
+	faceplant: {
+		num: 928,
+		accuracy: 100,
+		basePower: 80,
+		category: "Physical",
+		name: "Faceplant",
+		pp: 20,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					spe: 1,
+					atk: 1,
+					spa: 1,
+					def: -2,
+					spd: -2,
+				},
+			},
+		},
+		target: "normal",
+		type: "ice",
+		contestType: "Cool",
+	},	
 };

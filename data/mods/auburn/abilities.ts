@@ -5632,24 +5632,37 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: -4,
 	},
-friendinsideme: {
-	onResidualOrder: 29,
-	onResidual(pokemon) {
-		if (pokemon.baseSpecies.baseSpecies !== 'Loggy' || pokemon.transformed || !pokemon.hp) return;
-		if (pokemon.species.id === 'loggyfriend' || pokemon.hp > pokemon.maxhp / 2) return;
-		this.add('-activate', pokemon, 'ability: Friend Inside Me');
-		pokemon.formeChange('Loggy-FRIEND', this.effect, true);
-		pokemon.baseMaxhp = Math.floor(Math.floor(
-			2 * pokemon.species.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100
-		) * pokemon.level / 100 + 10);
-		const newMaxHP = pokemon.volatiles['dynamax'] ? (2 * pokemon.baseMaxhp) : pokemon.baseMaxhp;
-		pokemon.hp = newMaxHP - (pokemon.maxhp - pokemon.hp);
-		pokemon.maxhp = newMaxHP;
-		this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
+	friendinsideme: {
+		onResidualOrder: 29,
+		onResidual(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies !== 'Loggy' || pokemon.transformed || !pokemon.hp) return;
+			if (pokemon.species.id === 'loggyfriend' || pokemon.hp > pokemon.maxhp / 2) return;
+			this.add('-activate', pokemon, 'ability: Friend Inside Me');
+			pokemon.formeChange('Loggy-FRIEND', this.effect, true);
+			pokemon.baseMaxhp = Math.floor(Math.floor(
+				2 * pokemon.species.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100
+			) * pokemon.level / 100 + 10);
+			const newMaxHP = pokemon.volatiles['dynamax'] ? (2 * pokemon.baseMaxhp) : pokemon.baseMaxhp;
+			pokemon.hp = newMaxHP - (pokemon.maxhp - pokemon.hp);
+			pokemon.maxhp = newMaxHP;
+			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
+		},
+		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
+		name: "Friend Inside Me",
+		rating: 5,
+		num: 311,
 	},
-	flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
-	name: "Friend Inside Me",
-	rating: 5,
-	num: 311,
-},
+	hammertime: {
+		onBasePowerPriority: 19,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['hammer']) {
+				this.debug('Hammertime boost');
+				return this.chainModify(1.5);
+			}
+		},
+		flags: {},
+		name: "Hammertime",
+		rating: 3.5,
+		num: 312,
+	},
 }

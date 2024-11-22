@@ -132,11 +132,11 @@ export const Formats: FormatList = [
 		},
 	},
 	{
-		name: "[Gen 9] Pokemon Awesome",
-		desc: `Pokemon Awesome baby`,
+		name: "[Gen 9] Pokemon A&G",
+		desc: `Pokemon Auburn & Goldenrod`,
 		threads: [],
-		mod: 'awesome',
-		ruleset: ['Standard', 'Data Mod'],
+		mod: 'auburn',
+		ruleset: ['Standard'],
 		banlist: ['Uber', 'Arena Trap', 'Sand Veil', 'Quick Claw', 'Soul Dew', 'Baton Pass'],
 	},
 	{
