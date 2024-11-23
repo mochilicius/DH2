@@ -23,4 +23,8 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Auburn",
 		doublesTier: "Doubles Auburn",
 	},	
+	buzz: {
+		tier: "Auburn",
+		doublesTier: "Doubles Auburn",
+	},	
 };

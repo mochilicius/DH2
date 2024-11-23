@@ -5662,6 +5662,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		flags: {},
 		name: "Hammertime",
+		shortDesc: "Boosts Hammer moves by 50%.",	
 		rating: 3.5,
 		num: 312,
 	},

@@ -22177,7 +22177,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 	superdededejump: {
 		num: 927,
 		accuracy: 95,
-		basePower: 135,
+		basePower: 140,
 		category: "Physical",
 		name: "Super Dedede Jump",
 		pp: 5,
@@ -22238,8 +22238,49 @@ export const Moves: {[moveid: string]: MoveData} = {
 				},
 			},
 		},
+		shortDesc: "Boosts Atk/Spe/SpA by 1, lowers Defenses by 2.",	
 		target: "normal",
 		type: "ice",
 		contestType: "Cool",
 	},	
+	buzzoff: {
+		num: 929,
+		accuracy: 100,
+		basePower: 20,
+		category: "Physical",
+		name: "Buzz Off",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (target.status === 'flinch') {
+				return this.chainModify(2);
+			}
+		},
+		overrideDefensiveStat: 'spd',
+		multihit: [2, 5],
+		secondary: null,
+		target: "normal",
+		type: "Flying",
+		shortDesc: "Hits 2-5 times. Hits the opponent's Special Defense.",	
+		contestType: "Beautiful",
+	},
+	torpedothrow: {
+		num: 930,
+		accuracy: 85,
+		basePower: 30,
+		category: "Special",
+		name: "Torpedo Throw",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		secondary: {
+			chance: 100,
+			volatileStatus: 'flinch',
+		},
+		shortDesc: "Guaranteed flinch.",	
+		target: "normal",
+		type: "Water",
+		contestType: "Beautiful",
+	},
 };

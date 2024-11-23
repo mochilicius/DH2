@@ -77,4 +77,16 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
         eggGroups: ["Undiscovered"],
         gen: 9,
     },
+    buzz: {
+        num: -5021,
+        name: "Buzz",
+        types: ["Water", "Flying"],
+        baseStats: {hp: 73, atk: 112, def: 55, spa: 50, spd: 55, spe: 125},
+        abilities: {0: "Unaware", 1: "Tinted Lens", H: "Guts"},
+        heightm: 1.1,
+        weightkg: 50,
+        color: "Green",
+        eggGroups: ["Undiscovered"],
+        gen: 9,
+    },
 };
