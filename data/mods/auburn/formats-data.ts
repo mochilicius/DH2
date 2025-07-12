@@ -27,4 +27,8 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Auburn",
 		doublesTier: "Doubles Auburn",
 	},	
+	nightmarefredbear: {
+		tier: "Auburn",
+		doublesTier: "Doubles Auburn",
+	},	
 };

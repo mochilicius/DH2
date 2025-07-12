@@ -22251,36 +22251,52 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Buzz Off",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
-		onBasePower(basePower, pokemon, target) {
-			if (target.status === 'flinch') {
-				return this.chainModify(2);
-			}
-		},
+		flags: {protect: 1, mirror: 1, metronome: 1, sound: 1},
 		overrideDefensiveStat: 'spd',
 		multihit: [2, 5],
 		secondary: null,
 		target: "normal",
-		type: "Flying",
+		type: "Water",
 		shortDesc: "Hits 2-5 times. Hits the opponent's Special Defense.",	
 		contestType: "Beautiful",
 	},
 	torpedothrow: {
 		num: 930,
-		accuracy: 85,
-		basePower: 30,
-		category: "Special",
+		accuracy: 100,
+		basePower: 40,
+		category: "Physical",
 		name: "Torpedo Throw",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
+		pp: 10,
+		priority: 3,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onTry(source) {
+			if (source.activeMoveActions > 1) {
+				this.hint("Torpedo Throw only works on your first turn out.");
+				return false;
+			}
+		},
 		secondary: {
 			chance: 100,
 			volatileStatus: 'flinch',
 		},
-		shortDesc: "Guaranteed flinch.",	
+		shortDesc: "Guaranteed flinch. Only works on your first turn out.",	
 		target: "normal",
-		type: "Water",
-		contestType: "Beautiful",
+		type: "Flying",
+		contestType: "Cute",
+	},
+	biteof83: {
+		num: 931,
+		accuracy: 100,
+		basePower: 83,
+		category: "Physical",
+		name: "Bite of '87",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, bite: 1},
+		willCrit: true,
+		secondary: null,
+		target: "normal",
+		shortDesc: "Always results in a critical hit.",			
+		type: "Dark",
 	},
 };

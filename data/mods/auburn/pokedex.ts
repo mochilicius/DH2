@@ -89,4 +89,16 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
         eggGroups: ["Undiscovered"],
         gen: 9,
     },
+    nightmarefredbear: {
+        num: -5022,
+        name: "Nightmare Fredbear",
+        types: ["Steel", "Ghost"],
+        baseStats: {hp: 83, atk: 130, def: 130, spa: 87, spd: 110, spe: 40},
+        abilities: {0: "Strong Jaw", 1: "Full Metal Body", H: "Bad Dreams"},
+        heightm: 5.1,
+        weightkg: 500,
+        color: "Yellow",
+        eggGroups: ["Undiscovered"],
+        gen: 9,
+    },
 };
