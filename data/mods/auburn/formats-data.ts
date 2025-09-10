@@ -3,14 +3,6 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Auburn",
 		doublesTier: "Doubles Auburn",
 	},
-	drpoopyfart: {
-		tier: "Auburn",
-		doublesTier: "Doubles Auburn",
-	},
-	poopotron8: {
-		tier: "Auburn",
-		doublesTier: "Doubles Auburn",
-	},
 	loggy: {
 		tier: "Auburn",
 		doublesTier: "Doubles Auburn",
