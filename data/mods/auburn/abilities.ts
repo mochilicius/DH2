@@ -5693,6 +5693,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		flags: {},
 		name: "Fucking Evil",
+		shortDesc: "Makes the battlefield electric with how evil he is.",
 		rating: 4,
 		num: 226,
 	},
