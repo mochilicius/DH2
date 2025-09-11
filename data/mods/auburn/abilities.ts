@@ -5662,8 +5662,38 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		flags: {},
 		name: "Hammertime",
-		shortDesc: "Boosts Hammer moves by 50%.",	
+		shortDesc: "Boosts Hammer moves by 50%.",
 		rating: 3.5,
 		num: 312,
+	},
+	aihumor: {
+		onStart(pokemon) {
+			if (this.suppressingAbility(pokemon)) return;
+			this.add('-ability', pokemon, 'AIHUMOR');
+		},
+		onAnyBasePowerPriority: 20,
+		onAnyBasePower(basePower, source, target, move) {
+			if (target === source || move.category === 'Status' || move.type !== 'Electric') return;
+			if (!move.auraBooster?.hasAbility('AIHUMOR')) move.auraBooster = this.effectState.target;
+			if (move.auraBooster !== this.effectState.target) return;
+			return this.chainModify([move.hasAuraBreak ? 3072 : 5448, 4096]);
+		},
+		flags: {},
+		name: "AIHUMOR",
+		shortDesc: "Boosts Electric type moves with the power of AI.",
+		rating: 3,
+		num: 186,
+	},
+	fuckingevil: {
+		onStart(source) {
+			this.field.setTerrain('electricterrain');
+		},
+		onModifyMove(move) {
+			move.ignoreAbility = true;
+		},
+		flags: {},
+		name: "Fucking Evil",
+		rating: 4,
+		num: 226,
 	},
 }
