@@ -83,4 +83,8 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Auburn",
 		doublesTier: "Doubles Auburn",
 	},
+	kingoftheory: {
+		tier: "Illegal",
+		doublesTier: "Illegal",
+	},
 };

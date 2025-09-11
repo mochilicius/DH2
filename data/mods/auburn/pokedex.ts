@@ -257,4 +257,16 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
         eggGroups: ["Undiscovered"],
         gen: 9,
     },
+    kingoftheory: {
+        num: -5036,
+        name: "KING OF THEORY",
+        types: ["Dark", "Dragon"],
+        baseStats: {hp: 200, atk: 200, def: 200, spa: 200, spd: 200, spe: 200},
+        abilities: {0: "Good as Gold"},
+        heightm: 1,
+        weightkg: 400,
+        color: "Purple",
+        eggGroups: ["Undiscovered"],
+        gen: 9,
+    },
 };
