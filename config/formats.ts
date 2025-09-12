@@ -3466,7 +3466,7 @@ export const Formats: FormatList = [
 	{
 		name: "[Gen 9] Doubles Custom Game",
 
-		mod: 'gen9',
+		mod: 'auburn',
 		gameType: 'doubles',
 		searchShow: false,
 		battle: {trunc: Math.trunc},
