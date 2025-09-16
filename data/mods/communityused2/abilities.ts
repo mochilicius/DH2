@@ -1,7 +1,7 @@
 export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 	generator: {
 		name: "Generator",
-		shortDesc: "Start at 0.75x power, gain 0.25x per attack used by or against. Max 1.5.",
+		shortDesc: "Attacks gain +0.1x power per attack used by or against. Max 1.3.",
 		onStart(pokemon) {
 			this.add('-ability', pokemon, 'Generator');
 			this.add('-message', `${pokemon.name} is revving up!`);
@@ -27,10 +27,11 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 			},
 			onBasePowerPriority: 21,
 			onBasePower(basePower, attacker, defender, move) {
-				if (this.effectState.generatorTriggers === 0) return this.chainModify([3, 4]);
-				if (this.effectState.generatorTriggers === 1) return this.chainModify([4, 4]);
-				if (this.effectState.generatorTriggers === 2) return this.chainModify([5, 4]);
-				if (this.effectState.generatorTriggers === 3) return this.chainModify([6, 4]);
+				return this.chainModify([this.effectState.generatorTriggers + 10, 10]);
+				//if (this.effectState.generatorTriggers === 0) return this.chainModify([3, 4]);
+				//if (this.effectState.generatorTriggers === 1) return this.chainModify([4, 4]);
+				//if (this.effectState.generatorTriggers === 2) return this.chainModify([5, 4]);
+				//if (this.effectState.generatorTriggers === 3) return this.chainModify([6, 4]);
 			},
 		},
 		flags: { breakable: 1 },
@@ -48,7 +49,7 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 		onDamagingHit(damage, target, source, move) {
 			const side = source.isAlly(target) ? source.side.foe : source.side;
 			const stealthRocks = side.sideConditions['stealthrock'];
-			if ((!stealthRocks)) {
+			if ((!stealthRocks) && this.checkMoveMakesContact(move, source, target)) {
 				this.add('-activate', target, 'ability: Brittle Crystals');
 				side.addSideCondition('stealthrock', target);
 				this.damage(target.baseMaxhp / 8, target, target);
@@ -56,19 +57,25 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 		},
 		flags: { breakable: 1 },
 		name: "Brittle Crystals",
-		shortDesc: "When hit by an attack, set up Stealth Rock on the opposing side. User takes 12.5%.",
+		shortDesc: "When hit by a contact move, set up Rocks on the opposing side. User takes 12.5%.",
 	},
 	dreamrunner: {
-		onModifySpePriority: 5,
+		/*onModifySpePriority: 5,
 		onModifySpe(spe, pokemon) {
 			for (const target of pokemon.foes()) {
 				if (target.status === 'slp') {
 					return this.chainModify(1.5);
 				}
 			}
+		},*/
+		onAnyAfterSetStatus(status, target, source, effect) {
+			if (source !== this.effectState.target || target === source || effect.effectType !== 'Move') return;
+			if (status.id === 'slp') {
+				this.boost({spe: 1});
+			}
 		},
 		name: "Dream Runner",
-		shortDesc: "If the opposing Pokemon is asleep, the user's speed is boosted by 1.5x."
+		shortDesc: "If this Pokemon puts another Pokemon to sleep, its Speed is boosted by 1."
 	},
 	frostcloak: {
 		onDamage(damage, target, source, effect) {
@@ -130,11 +137,11 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 	overconfidence: {
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, pokemon) {
-			if (pokemon.hp >= (pokemon.baseMaxhp / 2)) return this.chainModify(1.2);
+			if (pokemon.hp >= (pokemon.baseMaxhp / 2)) return this.chainModify(1.3);
 			return this.chainModify(0.8);
 		},
 		name: "Overconfidence",
-		shortDesc: "If above half health, deals 1.2x damage. When under, deals 0.8x.",
+		shortDesc: "If above half health, deals 1.3x damage. When under, deals 0.8x.",
 	},
 	patience: {
 		onAfterMove(source, target, move) {
@@ -154,10 +161,11 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 	},
 	envious: {
 		onBasePower(basePower, attacker, defender, move) {
-			if (defender.hp === defender.baseMaxhp) return this.chainModify([13, 10]);
+			//if (defender.hp === defender.baseMaxhp) return this.chainModify([13, 10]);
+			if (attacker.hp < defender.hp) return this.chainModify([13, 10]);
 		},
 		name: "Envious",
-		shortDesc: "Deals 1.3x damage if the target is at full HP.",
+		shortDesc: "Deals 1.3x damage if the target has more HP than the user.",
 	},
 	phasein: {
 		onStart(pokemon) {
@@ -177,31 +185,41 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 			},
 			onModifyAtkPriority: 5,
 			onModifyAtk(atk, pokemon) {
-				return this.chainModify(0.5);
+				return this.chainModify(2/3);
 			},
 			onModifySpe(spe, pokemon) {
-				return this.chainModify(0.5);
+				return this.chainModify(2/3);
 			},
 			onEnd(target) {
 				this.add('-end', target, 'Phase In');
 			},
-			onSourceModifyDamage(damage, source, target, move) {
-				let mod = 1;
-				if (move.flags['contact']) mod /= 2;
-				return this.chainModify(mod);
-			},
+			//onSourceModifyDamage(damage, source, target, move) {
+			//	let mod = 1;
+			//	if (move.flags['contact']) mod /= 2;
+			//	return this.chainModify(mod);
+			//},
 		},
 		flags: {breakable: 1},
 		name: "Phase In",
-		shortDesc: "For 5 turns, halves speed and attack of user, and take half damage from contact moves.",
+		shortDesc: "For 5 turns, speed and attack of user are 2/3.",
+		//shortDesc: "For 5 turns, halves speed and attack of user, and take half damage from contact moves.",
 
 	},
 	rooted: {
 		onStart(pokemon) {
-			pokemon.addVolatile('ingrain');
+			this.add('-start', pokemon, 'ability: Rooted');
+			this.add('-message', `${pokemon.name}'s roots run deep!`);
+		},
+		onResidualOrder: 7,
+		onResidual(pokemon) {
+			this.heal(pokemon.baseMaxhp / 16);
+		},
+		onDragOut(pokemon) {
+			this.add('-activate', pokemon, 'ability: Rooted');
+			return null;
 		},
 		name: "Rooted",
-		shortDesc: "Ingrains the user in the ground on switch-in.",
+		shortDesc: "1/16 max HP residual healing, prevents the user from being forced out.",
 
 	},
 	saunapower: {
@@ -247,6 +265,7 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 	ouroboros: {
 		onStart(pokemon) {
 			pokemon.addVolatile('ouroboros');
+			this.add('-ability', pokemon, 'Ouroboros');
 			this.add('-message', `${pokemon.name} is circling!`);
 		},
 		condition: {
@@ -261,10 +280,10 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 					pokemon.removeVolatile('ouroboros');
 					return;
 				}
-				if (this.effectState.lastMove === move.id) {
+				if (this.effectState.lastMove === move.name) {
 					this.effectState.numConsecutive++;
 				} else if (pokemon.volatiles['twoturnmove']) {
-					if (this.effectState.lastMove !== move.id) {
+					if (this.effectState.lastMove !== move.name) {
 						this.effectState.numConsecutive = 1;
 					} else {
 						this.effectState.numConsecutive++;
@@ -272,14 +291,14 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 				} else if (this.effectState.lastMove === '') {
 						// on first turn out, do nothing
 				} else {
-					if (move.name != "Devour") {
+					if (move.name !== "Devour" && this.effectState.lastMove !== "Devour") {
 						this.effectState.numConsecutive = 0;
 						this.add('-message', `${pokemon.name} choked!`);
 						this.effectState.hasChoked = true;
-						this.damage(pokemon.baseMaxhp / 10, pokemon, pokemon);
+						//this.damage(pokemon.baseMaxhp / 10, pokemon, pokemon);
 					} else this.debug(`Devour cancelled choke`);
 				}
-				this.effectState.lastMove = move.id;
+				this.effectState.lastMove = move.name;
 			},
 			onModifyDamage(damage, source, target, move) {
 				if (this.effectState.hasChoked) return this.chainModify([3, 4]);
@@ -296,14 +315,14 @@ export const Abilities: { [abilityid: string]: ModdedAbilityData } = {
 	ragnarok: {
 		onResidual(pokemon) {
 			for (const target of this.getAllActive()) {
-				if (target.hp * 2 <= target.baseMaxhp) {
+				if (target.hp * 2 <= target.baseMaxhp || target.hasAbility('ragnarok')) {
 					//do nothing
 				} else {
-					this.damage(target.baseMaxhp / 8, target, target);
+					this.damage(target.baseMaxhp / 8, target, pokemon);
 				}
 			}
 		},
 		name: "Ragnarok",
-		shortDesc: "Damages all active Pokemon above 50% take 12.5%/turn.",
+		shortDesc: "All active Pokemon without this ability above 50% take 12.5% damage per turn.",
 	},
 };

@@ -7,6 +7,7 @@ export interface EventMethods {
 	onAfterEachBoost?: (this: Battle, boost: SparseBoostsTable, target: Pokemon, source: Pokemon, effect: Effect) => void;
 	onAfterHit?: MoveEventMethods['onAfterHit'];
 	onAfterMega?: (this: Battle, pokemon: Pokemon) => void;
+	onBeforeMega?: (this: Battle, pokemon: Pokemon) => void;
 	onAfterSetStatus?: (this: Battle, status: Condition, target: Pokemon, source: Pokemon, effect: Effect) => void;
 	onAfterSubDamage?: MoveEventMethods['onAfterSubDamage'];
 	onAfterSwitchInSelf?: (this: Battle, pokemon: Pokemon) => void;
@@ -607,6 +608,8 @@ export interface FieldConditionData extends
 export type ConditionData = PokemonConditionData | SideConditionData | FieldConditionData;
 
 export type ModdedConditionData = ConditionData & {inherit?: true};
+export interface ConditionDataTable {[id: IDEntry]: ConditionData}
+export interface ModdedConditionDataTable {[id: IDEntry]: ModdedConditionData}
 
 export class Condition extends BasicEffect implements
 	Readonly<BasicEffect & SideConditionData & FieldConditionData & PokemonConditionData> {

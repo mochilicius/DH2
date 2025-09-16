@@ -34,7 +34,7 @@ Ratings and how they work:
 
 export const Abilities: {[abilityid: string]: AbilityData} = {
 	noability: {
-		isNonstandard: "Past",
+		isNonstandard: "Past", 
 		flags: {},
 		name: "No Ability",
 		rating: 0.1,
@@ -3308,18 +3308,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 211,
 	},
 	powerofalchemy: {
-		onAllyFaint(target) {
-			if (!this.effectState.target.hp) return;
-			const ability = target.getAbility();
-			if (ability.flags['noreceiver'] || ability.id === 'noability') return;
-			if (this.effectState.target.setAbility(ability)) {
-				this.add('-ability', this.effectState.target, ability, '[from] ability: Power of Alchemy', '[of] ' + target);
-			}
+		onSwitchOut(pokemon) {
+			pokemon.heal(pokemon.baseMaxhp / 3);
 		},
-		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1},
+		flags: {},
 		name: "Power of Alchemy",
 		rating: 0,
 		num: 223,
+		shortDesc: "This Pokemon restores 1/3 of its maximum HP, rounded down, when it switches out.",
 	},
 	powerspot: {
 		onAllyBasePowerPriority: 22,
@@ -4674,12 +4670,33 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	surgesurfer: {
 		onModifySpe(spe) {
-			if (this.field.isTerrain('electricterrain')) {
-				return this.chainModify(2);
+			return this.chainModify(2);
+		},
+		onStart(source) {
+			if (this.field.setTerrain('electricterrain')) {
+				this.field.terrainState.duration = 0;
+			} else if (this.field.isTerrain('electricterrain') && this.field.terrainState.duration !== 0) {
+				this.add('-ability', source, 'Surge Surfer');
+				this.field.terrainState.source = source;
+				this.field.terrainState.duration = 0;
 			}
+		},
+		onEnd(pokemon) {
+			if (this.field.terrainState.source !== pokemon || !this.field.isTerrain('electricterrain')) return;
+			for (const target of this.getAllActive()) {
+				if (target === pokemon) continue;
+				if (target.hasAbility('surgesurfer')) {
+					this.field.terrainState.source = target;
+					return;
+				}
+			}
+			pokemon.m.forceCustomBlock = true;
+			this.field.clearTerrain();
+			pokemon.m.forceCustomBlock = null;
 		},
 		flags: {},
 		name: "Surge Surfer",
+		shortDesc: "Electric Terrain is active; this Pokemon's Spe is doubled.",
 		rating: 3,
 		num: 207,
 	},

@@ -277,7 +277,7 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		megaName: "Ninetales-Mega",
 		megaAbility: {0: "Wandering Spirit"},
 		megaStats: {hp: 73, atk: 76, def: 105, spa: 101, spd: 130, spe: 120},
-		megaStone: "Ninetalinite",
+		megaStone: "Ninetalesite",
 		megaCreator: "DrPumpkinz",
 	},
 
@@ -301,5 +301,509 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		megaStats: {hp: 57, atk: 105, def: 115, spa: 156, spd: 138, spe: 39},
 		megaStone: "Hatterenite",
 		megaCreator: "okispokis",
+	},
+
+	// slate 6
+
+	ribombee: {
+		inherit: true,
+		mega: "ribombeemega",
+		megaName: "Ribombee-Mega",
+		megaAbility: {0: "Powder Coat"},
+		megaStats: {hp: 60, atk: 70, def: 70, spa: 120, spd: 100, spe: 144},
+		megaStone: "Ribombinite",
+		movepoolAdditions: ["roost"],
+		megaCreator: "jazzmat",
+	},
+
+	bombirdier: {
+		inherit: true,
+		mega: "bombirdiermega",
+		megaName: "Bombirdier-Mega",
+		megaAbility: {0: "Late Delivery"},
+		megaStats: {hp: 70, atk: 138, def: 115, spa: 60, spd: 115, spe: 87},
+		megaStone: "Bombirdite",
+		movepoolAdditions: ["smackdown"],
+		megaCreator: "NANI",
+	},
+
+	fezandipiti: {
+		inherit: true,
+		mega: "fezandipitimega",
+		megaName: "Fezandipiti-Mega",
+		megaAbility: {0: "Toxic Drain"},
+		megaStats: {hp: 88, atk: 111, def: 92, spa: 115, spd: 145, spe: 104},
+		megaStone: "Fezandipitite",
+		megaCreator: "okispokis",
+	},
+
+	// slate 7
+
+	milotic: {
+		inherit: true,
+		mega: "miloticmega",
+		megaName: "Milotic-Mega",
+		megaType: ["Water", "Dragon"],
+		megaAbility: {0: "Multiscale"},
+		megaStats: {hp: 95, atk: 70, def: 109, spa: 130, spd: 155, spe: 81},
+		megaStone: "Milotinite",
+		megaCreator: "lydian",
+	},
+
+	probopass: {
+		inherit: true,
+		mega: "probopassmega",
+		megaName: "Probopass-Mega",
+		megaAbility: {0: "Congestion"},
+		megaStats: {hp: 60, atk: 145, def: 180, spa: 55, spd: 165, spe: 20},
+		megaStone: "Probopassite",
+		movepoolAdditions: ["trickroom"],
+		megaCreator: "Paulluxx",
+	},
+
+	ogerpon: {
+		inherit: true,
+		mega: "ogerponmega",
+		megaName: "Ogerpon-Mega",
+		megaType: ["Grass", "Fairy"],
+		megaAbility: {0: "Masquerade"},
+		megaStats: {hp: 80, atk: 135, def: 134, spa: 70, spd: 116, spe: 115},
+		megaStone: "Ogerponite",
+		megaCreator: "jazzmat",
+	},
+
+	// slate 8
+
+	dugtrioalola: {
+		inherit: true,
+		mega: "dugtrioalolamega",
+		megaName: "Dugtrio-Alola-Mega",
+		megaType: ["Ground", "Steel"],
+		megaAbility: {0: "Fur Coat"},
+		megaStats: {hp: 35, atk: 110, def: 110, spa: 60, spd: 80, spe: 130},
+		megaStone: "Dugtrionite",
+		movepoolAdditions: ["painsplit", "thunderwave", "taunt"],
+		megaCreator: "LordThemberchaud",
+	},
+
+	farigiraf: {
+		inherit: true,
+		otherFormes: [
+			"Farigiraf-Mega", "Farigiraf-Mega-Nocturnal"
+		],
+		formeOrder: [
+			"Farigiraf", "Farigiraf-Mega", "Farigiraf-Mega-Nocturnal"
+		],
+		movepoolAdditions: ["superpower"],
+	},
+	farigirafmega: {
+		num: 981,
+		name: "Farigiraf-Mega",
+		baseSpecies: "Farigiraf",
+		forme: "Mega",
+		types: ["Normal", "Psychic"],
+		baseStats: {hp: 120, atk: 100, def: 100, spa: 140, spd: 100, spe: 60},
+		abilities: {0: "Twin Heart"},
+		heightm: 1.8,
+		weightkg: 50,
+		eggGroups: ["Field"],
+		megaCreator: "Lysion",
+	},
+	farigirafmeganocturnal: {
+		num: 981,
+		name: "Farigiraf-Mega-Nocturnal",
+		baseSpecies: "Farigiraf",
+		forme: "Mega-Nocturnal",
+		types: ["Normal", "Dark"],
+		baseStats: {hp: 120, atk: 100, def: 100, spa: 140, spd: 100, spe: 60},
+		abilities: {0: "Twin Heart"},
+		heightm: 1.8,
+		weightkg: 50,
+		eggGroups: ["Field"],
+		requiredAbility: "Twin Heart",
+		battleOnly: "Farigiraf-Mega",
+		megaCreator: "Lysion",
+	},
+
+	hydrapple: {
+		inherit: true,
+		mega: "hydrapplemega",
+		megaName: "Hydrapple-Mega",
+		megaAbility: {0: "Sugar Rush"},
+		megaStats: {hp: 106, atk: 100, def: 150, spa: 130, spd: 110, spe: 44},
+		megaStone: "Hydrapplinite",
+		megaCreator: "jazzmat",
+	},
+
+	// slate 9
+
+	tentacruel: {
+		inherit: true,
+		mega: "tentacruelmega",
+		megaName: "Tentacruel-Mega",
+		megaAbility: {0: "Residual Drain"},
+		megaStats: {hp: 80, atk: 70, def: 98, spa: 130, spd: 120, spe: 117},
+		megaStone: "Tentacruelinite",
+		movepoolAdditions: ["scald"],
+		megaCreator: "Lord Pxperto & BlueRay",
+	},
+
+	galvantula: {
+		inherit: true,
+		mega: "galvantulamega",
+		megaName: "Galvantula-Mega",
+		megaAbility: {0: "Agitation"},
+		megaStats: {hp: 70, atk: 87, def: 70, spa: 127, spd: 80, spe: 138},
+		megaStone: "Galvantulinite",
+		movepoolAdditions: ["strengthsap"],
+		megaCreator: "jazzmat",
+	},
+
+	golurk: {
+		inherit: true,
+		mega: "golurkmega",
+		megaName: "Golurk-Mega",
+		megaAbility: {0: "Vengeful"},
+		megaStats: {hp: 89, atk: 144, def: 120, spa: 55, spd: 110, spe: 65},
+		megaStone: "Golurkite",
+		megaCreator: "okispokis",
+	},
+
+	// slate 10
+
+	emboar: {
+		inherit: true,
+		mega: "emboarmega",
+		megaName: "Emboar-Mega",
+		megaAbility: {0: "Inner Fortitude"},
+		megaStats: {hp: 110, atk: 143, def: 80, spa: 115, spd: 115, spe: 65},
+		megaStone: "Emboarite",
+		megaCreator: "War Incarnate",
+		megaWeight: 490,
+	},
+
+	beartic: {
+		inherit: true,
+		mega: "bearticmega",
+		megaName: "Beartic-Mega",
+		megaAbility: {0: "Frost Aura"},
+		megaStats: {hp: 95, atk: 140, def: 98, spa: 70, spd: 98, spe: 104},
+		megaStone: "Beartite",
+		movepoolAdditions: ["fakeout", "icespinner", "slackoff"],
+		megaCreator: "lydian",
+		megaWeight: 350,
+	},
+
+	kleavor: {
+		inherit: true,
+		mega: "kleavormega",
+		megaName: "Kleavor-Mega",
+		megaAbility: {0: "Defiant"},
+		megaStats: {hp: 70, atk: 165, def: 120, spa: 45, spd: 95, spe: 105},
+		megaStone: "Kleavorite",
+		movepoolAdditions: ["roost"],
+		megaCreator: "Lysion",
+	},
+
+	// slate 11
+
+	slitherwing: {
+		inherit: true,
+		mega: "slitherwingmega",
+		megaName: "Slither Wing-Mega",
+		megaAbility: {0: "Swarm"},
+		megaStats: {hp: 85, atk: 155, def: 99, spa: 105, spd: 135, spe: 91},
+		megaStone: "Slitherwite",
+		megaCreator: "DrPumpkinz",
+	},
+
+	ironthorns: {
+		inherit: true,
+		mega: "ironthornsmega",
+		megaName: "Iron Thorns-Mega",
+		megaAbility: {0: "Download"},
+		megaStats: {hp: 100, atk: 144, def: 128, spa: 110, spd: 84, spe: 104},
+		megaStone: "Thornite",
+		megaCreator: "okispokis",
+	},
+
+	wochien: {
+		inherit: true,
+		mega: "wochienmega",
+		megaName: "Wo-Chien-Mega",
+		megaAbility: {0: "Grudgeful Tablets"},
+		megaStats: {hp: 85, atk: 104, def: 141, spa: 112, spd: 144, spe: 84},
+		megaStone: "Wochienite",
+		movepoolAdditions: ["strengthsap"],
+		megaCreator: "lydian",
+	},
+
+	// slate 12
+
+	ludicolo: {
+		inherit: true,
+		mega: "ludicolomega",
+		megaName: "Ludicolo-Mega",
+		megaAbility: {0: "Magic Bounce"},
+		megaStats: {hp: 80, atk: 70, def: 110, spa: 110, spd: 120, spe: 90},
+		megaStone: "Ludicolinite",
+		movepoolAdditions: ["flipturn"],
+		megaCreator: "okispokis",
+	},
+
+	skeledirge: {
+		inherit: true,
+		mega: "skeledirgemega",
+		megaName: "Skeledirge-Mega",
+		megaAbility: {0: "Haunting Melody"},
+		megaStats: {hp: 104, atk: 80, def: 140, spa: 125, spd: 110, spe: 71},
+		megaStone: "Skeledite",
+		megaCreator: "jazzmat",
+	},
+
+	bellibolt: {
+		inherit: true,
+		mega: "belliboltmega",
+		megaName: "Bellibolt-Mega",
+		megaType: ["Electric", "Water"],
+		megaAbility: {0: "Liquidate"},
+		megaStats: {hp: 109, atk: 79, def: 126, spa: 123, spd: 103, spe: 55},
+		megaStone: "Belliboltite",
+		movepoolAdditions: ["surf"],
+		megaCreator: "War Incarnate",
+	},
+
+	// slate 13
+
+	arcanine: {
+		inherit: true,
+		mega: "arcaninemega",
+		megaName: "Arcanine-Mega",
+		megaType: ["Fire", "Dragon"],
+		megaAbility: {0: "Supreme Overlord"},
+		megaStats: {hp: 90, atk: 130, def: 90, spa: 120, spd: 100, spe: 125},
+		megaStone: "Arcanite",
+		megaCreator: "DrPumpkinz",
+	},
+
+	mabosstiff: {
+		inherit: true,
+		mega: "mabosstiffmega",
+		megaName: "Mabosstiff-Mega",
+		megaAbility: {0: "Regenerator"},
+		megaStats: {hp: 80, atk: 155, def: 120, spa: 65, spd: 90, spe: 95},
+		megaStone: "Mabosstite",
+		movepoolAdditions: ["partingshot"],
+		megaCreator: "okispokis",
+	},
+
+	okidogi: {
+		inherit: true,
+		mega: "okidogimega",
+		megaName: "Okidogi-Mega",
+		megaAbility: {0: "Toxic Gains"},
+		megaStats: {hp: 88, atk: 138, def: 160, spa: 78, spd: 111, spe: 80},
+		megaStone: "Okidogite",
+		megaCreator: "DrPumpkinz",
+	},
+
+	// slate 14
+
+	perrserker: {
+		inherit: true,
+		otherFormes: [
+			"Perrserker-Mega",  "Brambleghast-Mega-Busted",
+		],
+		formeOrder: [
+			"Perrserker", "Perrserker-Mega",  "Brambleghast-Mega-Busted",
+		],
+	},
+	perrserkermega: {
+		num: 947,
+		name: "Perrserker-Mega", 
+		baseSpecies: "Perrserker",
+		forme: "Mega",
+		types: ["Steel"],
+		baseStats: {hp: 70, atk: 190, def: 100, spa: 50, spd: 70, spe: 60},
+		abilities: {0: "Ice Face"},
+		heightm: 0.8,
+		weightkg: 28,
+		color: "Brown",
+		eggGroups: ["Field"],
+		requiredItem: "Perrserkite",
+		battleOnly: "Perrserker",
+		creator: "DrPumpkinz",
+	},
+	perrserkermegabusted: {
+		num: 947,
+		name: "Perrserker-Mega-Busted",
+		baseSpecies: "Perrserker",
+		forme: "Mega-Busted",
+		types: ["Steel"],
+		baseStats: {hp: 70, atk: 190, def: 100, spa: 50, spd: 70, spe: 60},
+		abilities: {0: "Ice Face"},
+		heightm: 0.8,
+		weightkg: 28,
+		color: "Brown",
+		eggGroups: ["Field"],
+		requiredItem: "Perrserkite",
+		battleOnly: "Perrserker",
+		creator: "DrPumpkinz",
+	},
+
+	meowscarada: {
+		inherit: true,
+		mega: "meowscaradamega",
+		megaName: "Meowscarada-Mega",
+		megaAbility: {0: "Tricky Surge"},
+		megaStats: {hp: 76, atk: 130, def: 100, spa: 91, spd: 95, spe: 138},
+		megaStone: "Meowscaradite",
+		movepoolAdditions: ["fakeout"],
+		megaCreator: "War Incarnate",
+	},
+
+	//ihateformsihateformsihateforms
+	maushold: {
+		inherit: true,
+		otherFormes: ["Maushold-Four", "Maushold-Mega", "Maushold-Four-Mega"],
+		formeOrder: ["Maushold", "Maushold-Four", "Maushold-Mega", "Maushold-Four-Mega"],
+		movepoolAdditions: ["moonlight"],
+	},
+	mausholdmega: {
+		num: 925,
+		name: "Maushold-Mega",
+		baseSpecies: "Maushold",
+		forme: "Mega",
+		types: ["Normal", "Fairy"],
+		baseStats: {hp: 74, atk: 95, def: 120, spa: 65, spd: 110, spe: 101},
+		abilities: {0: "Prankster"},
+		heightm: 0.3,
+		weightkg: 2.3,
+		color: "White",
+		eggGroups: ["Field", "Fairy"],
+		requiredItem: "Mausholdinite",
+		battleOnly: "Maushold",
+		creator: "LordThemberchaud",
+	},
+	mausholdfourmega: {
+		num: 925,
+		name: "Maushold-Four-Mega",
+		baseSpecies: "Maushold",
+		forme: "Four-Mega",
+		types: ["Normal", "Fairy"],
+		baseStats: {hp: 74, atk: 95, def: 120, spa: 65, spd: 110, spe: 101},
+		abilities: {0: "Prankster"},
+		heightm: 0.3,
+		weightkg: 2.3,
+		color: "White",
+		eggGroups: ["Field", "Fairy"],
+		requiredItem: "Mausholdinite",
+		battleOnly: "Maushold-Four",
+		creator: "LordThemberchaud",
+	},
+
+	// slate 15
+
+	cloyster: {
+		inherit: true,
+		mega: "cloystermega",
+		megaName: "Cloyster-Mega",
+		megaAbility: {0: "Snow Warning"},
+		megaStats: {hp: 50, atk: 105, def: 230, spa: 115, spd: 65, spe: 60},
+		megaStone: "Cloysterite",
+		movepoolAdditions: ["rapidspin"],
+		megaCreator: "DrPumpkinz",
+	},
+
+	minior: {
+		inherit: true,
+		otherFormes: ["Minior-Meteor", "Minior-Mega", "Minior-Mega-Meteor"],
+		cosmeticFormes: ["Minior-Orange", "Minior-Yellow", "Minior-Green", "Minior-Blue", "Minior-Indigo", "Minior-Violet"],
+		formeOrder: [
+			 // All of the colored Minior Meteor formes (unsupported by PS) are numbers 0-6
+			"Minior-Meteor", "Minior-Meteor", "Minior-Meteor", "Minior-Meteor", "Minior-Meteor", "Minior-Meteor", "Minior-Meteor",
+			"Minior", "Minior-Orange", "Minior-Yellow", "Minior-Green", "Minior-Blue", "Minior-Indigo", "Minior-Violet",
+			"Minior-Mega", "Minior-Mega-Meteor"
+		],
+	},
+	miniormega: {
+		num: 774,
+		name: "Minior-Mega",
+		baseSpecies: "Minior",
+		forme: "Mega",
+		baseForme: "Red",
+		types: ["Rock", "Fairy"],
+		gender: "N",
+		baseStats: {hp: 60, atk: 140, def: 60, spa: 140, spd: 60, spe: 140},
+		abilities: {0: "Shields Down"},
+		heightm: 0.3,
+		weightkg: 0.3,
+		color: "Red",
+		requiredItem: "Miniorite",
+		battleOnly: "Minior",
+		creator: "DrPumpkinz",
+	},
+	miniormegameteor: {
+		num: 774,
+		name: "Minior-Meteor",
+		baseSpecies: "Minior",
+		forme: "Mega-Meteor",
+		types: ["Steel", "Flying"],
+		gender: "N",
+		baseStats: {hp: 60, atk: 60, def: 150, spa: 60, spd: 150, spe: 60},
+		abilities: {0: "Shields Down"},
+		heightm: 0.3,
+		weightkg: 40,
+		color: "Brown",
+		eggGroups: ["Mineral"],
+		requiredAbility: "Shields Down",
+		requiredItem: "Miniorite",
+		battleOnly: "Minior",
+		creator: "DrPumpkinz",
+	},
+
+	rabsca: {
+		inherit: true,
+		mega: "rabscamega",
+		megaName: "Rabsca-Mega",
+		megaType: ["Bug", "Ground"],
+		megaAbility: {0: "Drought"},
+		megaStats: {hp: 75, atk: 50, def: 105, spa: 155, spd: 140, spe: 45},
+		megaStone: "Rabscanite",
+		movepoolAdditions: ["teleport"],
+		megaCreator: "BlueRay & Lysion",
+	},
+
+	// slate 16
+
+	kingdra: {
+		inherit: true,
+		mega: "kingdramega",
+		megaName: "Kingdra-Mega",
+		megaAbility: {0: "Super Luck"},
+		megaStats: {hp: 75, atk: 115, def: 105, spa: 115, spd: 105, spe: 125},
+		megaStone: "Kingdranite",
+		megaCreator: "PalpitoadChamp",
+	},
+
+	sandaconda: {
+		inherit: true,
+		mega: "sandacondamega",
+		megaName: "Sandaconda-Mega",
+		megaAbility: {0: "Dust Devil"},
+		megaStats: {hp: 72, atk: 142, def: 160, spa: 65, spd: 100, spe: 71},
+		megaStone: "Sandacondanite",
+		movepoolAdditions: ["wideguard"],
+		megaCreator: "War Incarnate",
+	},
+
+	screamtail: {
+		inherit: true,
+		mega: "screamtailmega",
+		megaName: "Scream Tail-Mega",
+		megaAbility: {0: "Roaring Scream"},
+		megaStats: {hp: 115, atk: 75, def: 119, spa: 85, spd: 135, spe: 141},
+		megaStone: "Screamtailite",
+		megaCreator: "BlueRay",
 	},
 };

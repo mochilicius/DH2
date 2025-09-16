@@ -128,7 +128,14 @@ export const Scripts: ModdedBattleScriptsData = {
     },
 	pokemon: {
 		trySetStatus(status: string | Condition, source: Pokemon | null = null, sourceEffect: Effect | null = null) {
-			return this.setStatus(status, source, sourceEffect);
+			const setStatus = this.battle.dex.conditions.get(status);
+			if (setStatus.statusSlots > 1 && !['hvybrn', 'tox', 'shk', 'weakheavy', 'stp'].includes(status)) {
+				const statusOne = status.substring(0, 3);
+				const statusTwo = status.substring(3);
+				return this.setStatus(statusOne, source, sourceEffect) &&
+					   this.setStatus(statusTwo, source, sourceEffect);
+			}
+			else return this.setStatus(status, source, sourceEffect);
 		},
 		setStatus(
 			status: string | Condition,
@@ -143,7 +150,7 @@ export const Scripts: ModdedBattleScriptsData = {
 				if (!sourceEffect) sourceEffect = this.battle.effect;
 			}
 			if (!source) source = this;
-
+			
 			if (this.status && this.status.length !== 0) {
 				if(status.id.length !== 0) return this.setStatusTwo(this.status, source, sourceEffect, false, status);
 				else {
@@ -165,6 +172,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			}
 			const prevStatus = this.status;
 			const prevStatusState = this.statusState;
+			this.battle.add('-end', this, this.status, '[silent]');
 			if (status.id) {
 				const result: boolean = this.battle.runEvent('SetStatus', this, source, sourceEffect, status);
 				if (!result) {
@@ -191,6 +199,8 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (status.id && !this.battle.runEvent('AfterSetStatus', this, source, sourceEffect, status)) {
 				return false;
 			}
+			this.battle.add('-start', this, this.status, '[silent]');
+			
 			return true;
 		},
 		setStatusTwo(
@@ -203,30 +213,36 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (!this.hp) return false;
 			currentStatus = this.battle.dex.conditions.get(currentStatus);
 			newStatus = this.battle.dex.conditions.get(newStatus);
+			//console.log('currentstatus: ' + currentStatus.id + '\nnewStatus: ' + newStatus.id + '\nthis.status: ' + this.status);
 			if (this.battle.event) {
 				if (!source) source = this.battle.event.source;
 				if (!sourceEffect) sourceEffect = this.battle.effect;
 			}
 			if (!source) source = this;
 
-			if (currentStatus === newStatus.id) {
-				if (currentStatus.statusSlots === 1 && 
-				   newStatus.statusSlots === 1) {
-					delete this.status[newStatus.id];
+			if (currentStatus.id === newStatus.id) {
+				if (currentStatus.statusSlots === 1 && newStatus.statusSlots === 1) {
 					newStatus = this.battle.dex.conditions.get(newStatus.stackCondition);
-				} else if ((sourceEffect as Move)?.status) {
-					this.battle.add('-fail', source);
-					this.battle.attrLastMove('[still]');
-					return false;
-				}
-			} else if (this.status) {
-				if(currentStatus.statusSlots === 1 && 
-				   newStatus.statusSlots === 1) {
-					newStatus = this.battle.dex.conditions.get(this.status + newStatus.id);
+					this.battle.add('-end', this, this.status, '[silent]');
 					delete this.status;
 				} else if ((sourceEffect as Move)?.status) {
 					this.battle.add('-fail', source);
 					this.battle.attrLastMove('[still]');
+					return false;
+				} else {
+					return false;
+				}
+			} else if (this.status) {
+				if (currentStatus.statusSlots === 1 && 
+				   newStatus.statusSlots === 1) {
+					newStatus = this.battle.dex.conditions.get(this.status + newStatus.id);
+					this.battle.add('-end', this, this.status, '[silent]');
+					delete this.status;
+				} else if ((sourceEffect as Move)?.status) {
+					this.battle.add('-fail', source);
+					this.battle.attrLastMove('[still]');
+					return false;
+				} else {
 					return false;
 				}
 			}
@@ -244,6 +260,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			}
 			const prevStatus = this.status;
 			const prevStatusState = this.statusState;
+			this.battle.add('-end', this, this.status, '[silent]');
 			if (newStatus.id) {
 				const result: boolean = this.battle.runEvent('SetStatus', this, source, sourceEffect, newStatus);
 				if (!result) {
@@ -270,6 +287,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (newStatus.id && !this.battle.runEvent('AfterSetStatus', this, source, sourceEffect, newStatus)) {
 				return false;
 			}
+			this.battle.add('-start', this, this.status, '[silent]');
 			return true;
 		},
 		cureStatus(silent = false) {
@@ -278,6 +296,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (this.status === 'stp' && this.removeVolatile('nightmare')) {
 				this.battle.add('-end', this, 'Nightmare', '[silent]');
 			}
+			this.battle.add('-end', this, this.status, '[silent]');
 			this.setStatus('');
 			return true;
 		},
@@ -290,7 +309,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (this.fainted) return false;
 
 			const negateImmunity = !this.battle.runEvent('NegateImmunity', this, type);
-			const notImmune = type === 'Earth' ?
+			const notImmune = type === 'Earths' ?
 				this.isGrounded(negateImmunity) :
 				negateImmunity || this.battle.dex.getImmunity(type, this);
 			if (notImmune) return true;
@@ -342,7 +361,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (item === 'ironball') return true;
 			// If a Fire/Flying type uses Burn Up and Roost, it becomes ???/Flying-type, but it's still grounded.
 			if (!negateImmunity && this.hasType('Wind') && !(this.hasType('???') && 'perch' in this.volatiles)) return false;
-			if (this.hasAbility('aircushion') && !this.battle.field.isWeather("duststorm")) return false;
+			if (this.hasAbility('aircushion')) return this.battle.field.isWeather('duststorm');
 			if ('magnetrise' in this.volatiles) return false;
 			if ('telekinesis' in this.volatiles) return false;
 			return item !== 'airballoon' && item !== 'floatingstone';

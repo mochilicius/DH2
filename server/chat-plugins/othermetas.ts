@@ -2,7 +2,7 @@
  * Other Metagames chat plugin
  * Lets users see elements of Pokemon in various Other Metagames.
  * Originally by Spandan.
- * @author Kris
+ * @author dhelmise
 */
 
 import {Utils} from '../../lib';
@@ -70,7 +70,7 @@ export const commands: Chat.ChatCommands = {
 		}
 
 		if (target === 'month') this.target = 'omofthemonth';
-		this.run('formathelp');
+		return this.run('formathelp');
 	},
 	othermetashelp: [
 		`/om - Provides links to information on the Other Metagames.`,
@@ -91,7 +91,7 @@ export const commands: Chat.ChatCommands = {
 			} else {
 				throw new Chat.ErrorMessage(`A mod by the name of '${mod.trim()}' does not exist.`);
 			}
-			if (dex === Dex.dexes['ssb']) {
+			if (dex === Dex.dexes['gen9ssb']) {
 				throw new Chat.ErrorMessage(`The SSB mod supports custom elements for Mega Stones that have the capability of crashing the server.`);
 			}
 		}
@@ -208,7 +208,7 @@ export const commands: Chat.ChatCommands = {
 			} else {
 				throw new Chat.ErrorMessage(`A mod by the name of '${sep[1].trim()}' does not exist.`);
 			}
-			if (dex === Dex.dexes['ssb']) {
+			if (dex === Dex.dexes['gen9ssb']) {
 				throw new Chat.ErrorMessage(`The SSB mod supports custom elements for Mega Stones that have the capability of crashing the server.`);
 			}
 		}
@@ -815,7 +815,7 @@ export const commands: Chat.ChatCommands = {
 	],
 
 	reevo: 'showevo',
-	showevo(target, user, room, connection, cmd) {
+	showevo(target, room, user, connection, cmd) {
 		if (!this.runBroadcast()) return;
 		const targetid = toID(target);
 		const isReEvo = cmd === 'reevo';
@@ -825,34 +825,36 @@ export const commands: Chat.ChatCommands = {
 			throw new Chat.ErrorMessage(`Error: Pok\u00e9mon ${target} not found.`);
 		}
 		if (!evo.prevo) {
-			const evoBaseSpecies = Dex.species.get(evo.baseSpecies);
+			const evoBaseSpecies = Dex.species.get(
+				(Array.isArray(evo.battleOnly) ? evo.battleOnly[0] : evo.battleOnly) || evo.changesFrom || evo.name
+			);
 			if (!evoBaseSpecies.prevo) throw new Chat.ErrorMessage(`Error: ${evoBaseSpecies.name} is not an evolution.`);
 			const prevoSpecies = Dex.species.get(evoBaseSpecies.prevo);
 			const deltas = Utils.deepClone(evo);
-		    if (!isReEvo) {
-			    deltas.tier = 'CE';
-			    deltas.weightkg = evo.weightkg - prevoSpecies.weightkg;
-			    deltas.types = [];
-			    if (evo.types[0] !== prevoSpecies.types[0]) deltas.types[0] = evo.types[0];
-			    if (evo.types[1] !== prevoSpecies.types[1]) {
-				    deltas.types[1] = evo.types[1] || evo.types[0];
-			    }
-			    if (deltas.types.length) {
+			if (!isReEvo) {
+				deltas.tier = 'CE';
+				deltas.weightkg = evo.weightkg - prevoSpecies.weightkg;
+				deltas.types = [];
+				if (evo.types[0] !== prevoSpecies.types[0]) deltas.types[0] = evo.types[0];
+				if (evo.types[1] !== prevoSpecies.types[1]) {
+					deltas.types[1] = evo.types[1] || evo.types[0];
+				}
+				if (deltas.types.length) {
 					// Undefined type remover
-				    deltas.types = deltas.types.filter((type: string | undefined) => type !== undefined);
+					deltas.types = deltas.types.filter((type: string | undefined) => type !== undefined);
 
 					if (deltas.types[0] === deltas.types[1]) deltas.types = [deltas.types[0]];
-			    } else {
+				} else {
 					deltas.types = null;
-			    }
-		    }
-		    deltas.bst = 0;
-		    let i: StatID;
-		    for (i in evo.baseStats) {
+				}
+			}
+			deltas.bst = 0;
+			let i: StatID;
+			for (i in evo.baseStats) {
 				const statChange = evoBaseSpecies.baseStats[i] - prevoSpecies.baseStats[i];
 				const formeChange = evo.baseStats[i] - evoBaseSpecies.baseStats[i];
 				if (!isReEvo) {
-			    if (!evo.prevo) {
+					if (!evo.prevo) {
 						deltas.baseStats[i] = formeChange;
 					} else {
 						deltas.baseStats[i] = statChange;
@@ -919,5 +921,118 @@ export const commands: Chat.ChatCommands = {
 	],
 	showevohelp: [
 		`/showevo <Pok\u00e9mon> - Shows the changes that a Pok\u00e9mon applies in Cross Evolution`,
+	],
+
+	pokemove(target, room, user) {
+		if (!this.runBroadcast()) return;
+		const species = Dex.species.get(target);
+		if (!species.exists) return this.parse('/help pokemove');
+		const move = Utils.deepClone(Dex.moves.get('tackle'));
+		move.name = species.name;
+		move.type = species.types[0];
+		move.flags = {protect: 1};
+		move.basePower = Math.max(species.baseStats['atk'], species.baseStats['spa']);
+		move.pp = 5;
+		move.gen = species.gen;
+		move.num = species.num;
+		move.desc = move.shortDesc = `Gives ${species.abilities['0']} as a second ability after use.`;
+		move.category = species.baseStats['spa'] >= species.baseStats['atk'] ? 'Special' : 'Physical';
+		this.sendReply(`|raw|${Chat.getDataMoveHTML(move)}`);
+	},
+	pokemovehelp: [
+		`/pokemove <Pok\u00e9mon> - Shows the Pokemove data for <Pok\u00e9mon>.`,
+	],
+
+	shiny: 'shinymons',
+	shinymons(target, room, user) {
+		const args = target.split(',');
+		if (!toID(args[0])) return this.parse('/help shiny');
+		this.runBroadcast();
+		const dex = Dex.dexes['shinymons'];
+
+		let buffer = '';
+		const baseSpecies = Utils.deepClone(dex.species.get(args[0]));
+		const species = Utils.deepClone(dex.species.get(args[0] + "shiny"));
+		let details: { [k: string]: string } = {};
+
+		if (!baseSpecies.exists || baseSpecies.gen > dex.gen) {
+			const monName = species.gen > dex.gen ? species.name : args[0].trim();
+			const additionalReason = species.gen > dex.gen ? ` in Generation ${dex.gen}` : ``;
+			throw new Chat.ErrorMessage(`Error: Pok\u00e9mon '${monName}' not found${additionalReason}.`);
+		}
+		if (!species.exists) {
+			const monName = species.gen > dex.gen ? species.name : args[0].trim();
+			throw new Chat.ErrorMessage(`Error: Pok\u00e9mon '${monName}' does not have a Shiny form.`);
+		}
+		let weighthit = 20;
+		if (species.weighthg >= 2000) {
+			weighthit = 120;
+		} else if (species.weighthg >= 1000) {
+			weighthit = 100;
+		} else if (species.weighthg >= 500) {
+			weighthit = 80;
+		} else if (species.weighthg >= 250) {
+			weighthit = 60;
+		} else if (species.weighthg >= 100) {
+			weighthit = 40;
+		}
+		details = {
+			"Dex#": String(species.num),
+			Gen: String(species.gen) || 'CAP',
+			Height: `${species.heightm} m`,
+		};
+		details["Weight"] = `${species.weighthg / 10} kg <em>(${weighthit} BP)</em>`;
+		const gmaxMove = species.canGigantamax || dex.species.get(species.changesFrom).canGigantamax;
+		if (gmaxMove && dex.gen === 8) details["G-Max Move"] = gmaxMove;
+		if (species.color && dex.gen >= 5) details["Dex Colour"] = species.color;
+		if (species.eggGroups && dex.gen >= 2) details["Egg Group(s)"] = species.eggGroups.join(", ");
+		const evos: string[] = [];
+		for (const evoName of species.evos) {
+			const evo = dex.species.get(evoName);
+			if (evo.gen <= dex.gen) {
+				const condition = evo.evoCondition ? ` ${evo.evoCondition}` : ``;
+				switch (evo.evoType) {
+				case 'levelExtra':
+					evos.push(`${evo.name}-Shiny (level-up${condition})`);
+					break;
+				case 'levelFriendship':
+					evos.push(`${evo.name}-Shiny (level-up with high Friendship${condition})`);
+					break;
+				case 'levelHold':
+					evos.push(`${evo.name}-Shiny (level-up holding ${evo.evoItem}${condition})`);
+					break;
+				case 'useItem':
+					evos.push(`${evo.name}-Shiny (${evo.evoItem})`);
+					break;
+				case 'levelMove':
+					evos.push(`${evo.name}-Shiny (level-up with ${evo.evoMove}${condition})`);
+					break;
+				case 'other':
+					evos.push(`${evo.name}-Shiny (${evo.evoCondition})`);
+					break;
+				case 'trade':
+					evos.push(`${evo.name}-Shiny (trade${evo.evoItem ? ` holding ${evo.evoItem}` : condition})`);
+					break;
+				default:
+					evos.push(`${evo.name}-Shiny (${evo.evoLevel}${condition})`);
+				}
+			}
+		}
+		if (baseSpecies.prevo) {
+			details["Pre-Evolution"] = baseSpecies.prevo + "-Shiny";
+		}
+		if (!evos.length) {
+			details[`<font color="#686868">Does Not Evolve</font>`] = "";
+		} else {
+			details["Evolution"] = evos.join(", ");
+		}
+
+		buffer += `|raw|${Chat.getDataPokemonHTML(species, dex.gen)}\n`;
+		buffer += `|raw|<font size="1">${Object.entries(details).map(([detail, value]) => (
+			value === '' ? detail : `<font color="#686868">${detail}:</font> ${value}`)).join("&nbsp;|&ThickSpace;")}</font>\n`;
+		this.sendReply(buffer);
+	},
+	'shinymonshelp': [
+		`/shiny OR /shinymons <pokemon>[, gen] - Shows the Shiny form of a Pokémon in Shinymons.`,
 	],
 };

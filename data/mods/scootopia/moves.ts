@@ -23,19 +23,19 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {},
-		shortDesc: "Sac 50% HP, heal ally 25%, 50% dmg redux this turn.",
+		shortDesc: "Sac 12.5% HP, switch, heal ally 25%. Ally: 50% dmg redux this turn.",
 		onTryHit(source) {
 			if (!this.canSwitch(source.side)) {
 				this.add('-fail', source);
 				return this.NOT_FAIL;
 			}
-			if (source.hp <= Math.ceil(source.maxhp / 2)) {
+			if (source.hp <= Math.ceil(source.maxhp / 8)) {
 				this.add('-fail', source, 'move: Shed Tail', '[weak]');
 				return this.NOT_FAIL;
 			}
 		},
 		onHit(target) {
-			this.directDamage(Math.ceil(target.maxhp / 2));
+			this.directDamage(Math.ceil(target.maxhp / 8));
 		},
 		slotCondition: 'shedtail',
 		condition: {
@@ -123,6 +123,26 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 	// inherit: true,
 	// category: "Physical",
 	// },
+	photonray: {
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		name: "Photon Ray",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (pokemon.getStat('atk', false, true) > pokemon.getStat('spa', false, true)) move.category = 'Physical';
+		},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Photon Geyser", target);
+		},
+		secondary: null,
+		target: "normal",
+		type: "Psychic",
+		contestType: "Cool",
+	},
 	energysiphon: {
 		accuracy: 100,
 		basePower: 50,

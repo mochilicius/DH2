@@ -25,12 +25,12 @@ const hyperspaceLookup = {
 	calyrexshadow: { move: "Astral Barrage" },
 };
 export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
-	gravitas: {
+	graviton: {
 		shortDesc: "On switch-in, this Pokémon summons Gravity.",
 		onStart(source) {
 			this.field.addPseudoWeather('gravity');
 		},
-		name: "Gravitas",
+		name: "Graviton",
 		rating: 4,
 		num: -1,
 	},
@@ -104,7 +104,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 						types = ['Psychic'];
 						break;
 					case 'acidicterrain':
-						newType = 'Poison';
+						types = ['Poison'];
 						break;
 					default:
 						types = pokemon.baseSpecies.types;
@@ -172,7 +172,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		desc: "On switch-in, this Pokémon summons hail. It changes the current weather to rain whenever any opposing Pokémon has an attack that is super effective on this Pokémon or an OHKO move. Counter, Metal Burst, and Mirror Coat count as attacking moves of their respective types, Hidden Power counts as its determined type, and Judgment, Multi-Attack, Natural Gift, Revelation Dance, Techno Blast, and Weather Ball are considered Normal-type moves.",
 		shortDesc: "Summons hail on switch-in. If foe has a supereffective or OHKO move, summons rain.",
 		onStart(pokemon) {
-			let weather = 'hail';
 			for (const target of pokemon.foes()) {
 				for (const moveSlot of target.moveSlots) {
 					const move = this.dex.moves.get(moveSlot.move);
@@ -182,12 +181,15 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 						this.dex.getImmunity(moveType, pokemon) && this.dex.getEffectiveness(moveType, pokemon) > 0 ||
 						move.ohko
 					) {
-						weather = 'raindance';
+						this.field.setWeather('raindance');
+						return;
+					}
+					else {
+						this.field.setWeather('hail');
 						return;
 					}
 				}
 			}
-			this.field.setWeather(weather, pokemon);
 		},
 		onAnySwitchIn(pokemon) {
 			if (pokemon === this.effectState.target) return;
@@ -314,7 +316,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		shortDesc: "If this Pokémon is KOed, the attacker is cursed, then permanently receives this Ability.",
 		onFaint(target, source, effect) {
 			if (!source || !effect || target.side === source.side) return;
-			if (effect.effectType === 'Move' && !effect.isFutureMove) {
+			if (effect.effectType === 'Move' && !effect.flags['futuremove']) {
 				this.add('-ability', target, 'Nightmare Heart');
 				source.addVolatile('curse');
 				const bannedAbilities = [
@@ -719,7 +721,10 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		shortDesc: "If this Pokémon's target has Blackmail, it survives every hit with at least 1 HP.",
 		onDamagePriority: -0,
 		onAnyDamage(damage, target, source, effect) {
-			if (move.ignoreAbility) return;
+			if (effect.effectType === 'Move') {
+				let move = this.dex.moves.get(effect.id);
+				if (move.ignoreAbility) return;
+			}
 			if (source === this.effectState.target && target.hasAbility('blackmail') &&
 				damage >= target.hp && effect && effect.effectType === 'Move') {
 				this.add('-ability', source, 'Orderly Target');
@@ -769,7 +774,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.boost({atk: 1}, source);
 			}
 		},
-		onSourceAfterSubDamage(target, source, move) { // should still activate when targeting a Substitute
+		onSourceAfterSubDamage(damage, target, source, move) { // should still activate when targeting a Substitute
 			if (!move || !target) return;
 			if (target !== source && move.category !== 'Status' && target.getMoveHitData(move).typeMod > 0) {
 				this.boost({atk: 1}, source);
@@ -970,7 +975,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		desc: "After any of this Pokémon's stats is reduced, making contact with a Pokémon on its team burns the attacker. The duration is one turn for each stat stage that was reduced, and the duration is extended if stats are reduced again while it is already in effect.",
 		shortDesc: "After stat reduction, contact moves burn attacker. Duration = amount of stat reduction.",
 		name: "Volcanic Singe",
-		onBoost(boost, target, source, effect) {
+		onTryBoost(boost, target, source, effect) {
 			let i: BoostName;
 			for (i in boost) {
 				if (boost[i]! < 0) {
@@ -1014,7 +1019,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -32,
 	},
-	settle: {
+	/*settle: {
 		desc: "When using a given special move for the first time in at least three turns, this Pokémon uses its Attack stat, and the power is increased by 100%. Has no effect if the same special move has been used in the last three turns.",
 		shortDesc: "On using special move for the first time in at least 3 turns: move uses Atk stat, 2x power.",
 		name: "Settle",
@@ -1053,6 +1058,74 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		rating: 3,
 		num: -33,
+	},*/
+	settle: {
+		desc: "When using a given special move for the first time in at least three turns after its last boost, this Pokémon uses its Attack stat instead of Special Attack, and the move's power is doubled.",
+		shortDesc: "1st use of a special move (after 3 turns): uses Atk and 2x power.",
+		name: "Settle",
+		rating: 3,
+		num: -33,
+	
+		onStart(pokemon) {
+			pokemon.m.settleCooldowns = {}; // { [moveId]: lastBoostTurn }
+			pokemon.m.settleReadyMessagesShown = {}; // { [moveId]: boolean }
+		},
+	
+		onBeforeMove(pokemon, target, move) {
+			if (move.category !== 'Special' || move.basePower <= 0) return;
+	
+			if (!pokemon.m.settleCooldowns) {
+				pokemon.m.settleCooldowns = {};
+			}
+	
+			const lastBoostTurn = pokemon.m.settleCooldowns[move.id];
+			const turnsSinceLastBoost = lastBoostTurn !== undefined ? this.turn - lastBoostTurn : Infinity;
+	
+			if (turnsSinceLastBoost > 2) {
+				move.overrideOffensiveStat = 'atk';
+				move.basePower *= 2;
+				this.add('-ability', pokemon, 'Settle');
+				this.add('-message', `${pokemon.name} focused its strength into a powered-up ${move.name}!`);
+				pokemon.m.settleCooldowns[move.id] = this.turn;
+	
+				// Reset ready flag
+				if (pokemon.m.settleReadyMessagesShown) {
+					pokemon.m.settleReadyMessagesShown[move.id] = false;
+				}
+			}
+		},
+	
+		onResidualOrder: 5,
+		onResidual(pokemon) {
+			if (!pokemon.m.settleCooldowns) return;
+	
+			if (!pokemon.m.settleReadyMessagesShown) {
+				pokemon.m.settleReadyMessagesShown = {};
+			}
+	
+			for (const moveId in pokemon.m.settleCooldowns) {
+				const lastTurn = pokemon.m.settleCooldowns[moveId];
+				const turnsSince = this.turn - lastTurn;
+				const moveName = this.dex.moves.get(moveId).name;
+				const turnsUntilReady = Math.max(0, 3 - turnsSince);
+	
+				if (turnsUntilReady > 0) {
+					const message =
+						turnsUntilReady === 1
+							? `${pokemon.name}'s ${moveName} will be available for a power-up next turn.`
+							: `${pokemon.name}'s ${moveName} will be available for a power-up in ${turnsUntilReady} turn(s).`;
+					this.add('-ability', pokemon, 'Settle');
+					this.add('-message', message);
+					pokemon.m.settleReadyMessagesShown[moveId] = false;
+				} else {
+					if (!pokemon.m.settleReadyMessagesShown[moveId]) {
+						this.add('-ability', pokemon, 'Settle');
+						this.add('-message', `${pokemon.name}'s ${moveName} is ready to power up again!`);
+						pokemon.m.settleReadyMessagesShown[moveId] = true;
+					}
+				}
+			}
+		},
 	},
 	heavenlytechniques: {
 		shortDesc: "Slicing moves: +1 priority at full HP, always crit at 1/3 HP or less, +1 Defense otherwise.",
@@ -1066,7 +1139,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.boost({def: 1}, source);
 			}
 		},
-		onSourceAfterSubDamage(target, source, move) { // should still activate when targeting a Substitute
+		onSourceAfterSubDamage(damage, target, source, move) { // should still activate when targeting a Substitute
 			if (!move || !target) return;
 			if (source.hp === source.maxhp || source.hp <= source.maxhp / 3) return;
 			if (move.flags['slicing']) {
@@ -1238,7 +1311,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			onModifyDamage(damage, source, target, move) {
 				const dmgMod = [0x1000, 0x1333, 0x1666, 0x1999, 0x1CCC, 0x2000];
 				const numConsecutive = this.effectState.numConsecutive > 5 ? 5 : this.effectState.numConsecutive;
-				if (['hail'].includes(source.effectiveWeather())) {
+				if (['hail', 'snow'].includes(source.effectiveWeather())) {
 					return this.chainModify([dmgMod[numConsecutive], 0x1000]);
 				} else {
 					return damage * (1 + (this.effectState.numConsecutive / 10));
@@ -1370,7 +1443,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			if (!action) return;
 			const target = this.getTarget(action.pokemon, action.move, action.targetLoc);
 			if (!target) return;
-			if (!action.move.spreadHit && target.hp && target.hp <= target.maxhp / 2) {
+			if (action.move.target != 'allAdjacentFoes' && action.move.target != 'allAdjacent' && target.hp && target.hp <= target.maxhp / 2) {
 				pokemon.addVolatile('coupdegrass');
 			}
 		},
@@ -1406,7 +1479,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				];
 				if (
 					pokemon.side.pokemon[i].fainted ||
-					pokemon.side.pokemon[i].getAbility().isPermanent || additionalBannedAbilities.includes(pokemon.side.pokemon[i].ability)
+					pokemon.side.pokemon[i].getAbility().flags['notrace'] || additionalBannedAbilities.includes(pokemon.side.pokemon[i].ability)
 				) {
 					continue;
 				}
@@ -1438,6 +1511,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				}
 			},
 		},
+		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1},
 		name: "Masquerade",
 		rating: 3,
 		num: -47,
@@ -1448,7 +1522,12 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		name: "Body of Water",
 		onModifyMove(move, attacker) {
 			if (move.type === 'Water') {
-				move.useSourceDefensiveAsOffensive = true;
+				if (move.category === 'Special') {
+					move.overrideOffensiveStat = 'spd';
+				}
+				else if (move.category === 'Physical') {
+					move.overrideOffensiveStat = 'def';
+				}
 				(move as any).bodyofwaterBoosted = true;
 			}
 		},
@@ -1462,13 +1541,13 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			if (this.field.setWeather('hail')) {
 				this.add('-message', `${source.name} created an unrelenting winter storm!`);
 				this.hint("Everlasting Winter doesn't wear off until the user leaves the field!");
-				this.field.weatherData.duration = 0;
-			} else if (this.field.isWeather('hail') && this.field.weatherData.duration !== 0) {
+				this.field.weatherState.duration = 0;
+			} else if (this.field.isWeather('hail') && this.field.weatherState.duration !== 0) {
 				this.add('-ability', source, 'Everlasting Winter');
 				this.add('-message', `${source.name} created an unrelenting winter storm!`);
 				this.hint("Everlasting Winter doesn't wear off until the user leaves the field!");
-				this.field.weatherData.source = source;
-				this.field.weatherData.duration = 0;
+				this.field.weatherState.source = source;
+				this.field.weatherState.duration = 0;
 			}
 		},
 		onAnySetWeather(target, source, weather) {
@@ -1477,11 +1556,11 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			if (this.field.getWeather().id === 'hail' && !strongWeathers.includes(weather.id)) return false;
 		},
 		onEnd(pokemon) {
-			if (this.field.weatherData.source !== pokemon) return;
+			if (this.field.weatherState.source !== pokemon) return;
 			for (const target of this.getAllActive()) {
 				if (target === pokemon) continue;
 				if (target.hasAbility('everlastingwinter')) {
-					this.field.weatherData.source = target;
+					this.field.weatherState.source = target;
 					return;
 				}
 			}
@@ -2157,17 +2236,20 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		condition: {
 			duration: 1,
-			onAfterMove(source, target, move) {
+			onAfterMove(source, target, move) { 
 				for (const pokemon of this.getAllActive()) {
-					if (pokemon === source) continue;
-					if (!pokemon.hp) {
+					if (pokemon !== source && !pokemon.hp) {
 						source.removeVolatile('implode');
 						return;
 					}
 				}
+				if (target !== source && !target.hp) {
+					source.removeVolatile('implode');
+					return;
+				}
 				if (this.effectState.recoil && move.totalDamage) {
 					if (!this.activeMove) throw new Error("Battle.activeMove is null");
-					this.damage(this.clampIntRange(Math.round(this.activeMove.totalDamage * this.effectState.recoil[0] / this.effectState.recoil[1]), 1), source, source, 'recoil');
+					this.damage(this.clampIntRange(Math.round((this.activeMove.totalDamage as number) * this.effectState.recoil[0] / this.effectState.recoil[1]), 1), source, source, 'recoil');
 				}
 				if (this.effectState.mindBlownRecoil) {
 					this.damage(Math.round(source.maxhp / 2), source, source, this.dex.conditions.get('Mind Blown'), true);
@@ -2215,7 +2297,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -66,
 	},
-	cheapheat: {
+	/*cheapheat: {
 		desc: "When this Pokémon uses an attacking move, before the move hits, the Pokémon's attacking stat and the target's defending stat are raised by 1 stage. The stats that were raised are lowered by 1 stage after the move hits.",
 		shortDesc: "User's attacking stat and foe's defending stat: +1 before move, -1 after move.",
 		onBeforeMove(source, target, move) {
@@ -2293,6 +2375,87 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		name: "Cheap Heat",
 		rating: 3,
 		num: -67,
+	},*/
+	cheapheat: {
+		name: "Cheap Heat",
+		shortDesc: "Boosts user's attacking stat and targets' defending stats before hitting. Reverts after.",
+		desc: "When this Pokémon uses a damaging move, it boosts its relevant attacking stat (Attack or Sp. Atk) by 1 stage and the target's corresponding defending stat (Defense or Sp. Def) by 1 stage before damage is calculated. After the hit, both stats are lowered by 1 stage.",
+		rating: 3,
+		num: -67,
+	
+		onStart(pokemon) {
+			pokemon.m.cheapHeatTargets = new Map<AnyObject, BoostID>();
+			pokemon.m.cheapHeatSelfBoosted = null;
+		},
+	
+		onBeforeMove(pokemon, _target, move) {
+			if (move.category === 'Status' || move.basePower <= 0) return;
+	
+			const offensiveStat: BoostID = move.category === 'Physical' ? 'atk' : 'spa';
+			const defensiveStat: BoostID = move.category === 'Physical' ? 'def' : 'spd';
+	
+			// Boost user's attacking stat
+			const selfBoost: SparseBoostsTable = {};
+			selfBoost[offensiveStat] = 1;
+			this.boost(selfBoost, pokemon, pokemon, this.dex.abilities.get('Cheap Heat'));
+			pokemon.m.cheapHeatSelfBoosted = offensiveStat;
+	
+			// Determine valid targets
+			const targets: Pokemon[] = [];
+	
+			if (move.target === 'allAdjacent' || move.target === 'allAdjacentFoes') {
+				for (const foe of pokemon.side.foe.active) {
+					if (foe && !foe.fainted && pokemon.isAdjacent(foe)) {
+						targets.push(foe);
+					}
+				}
+				if (move.target === 'allAdjacent') {
+					for (const ally of pokemon.side.active) {
+						if (ally && ally !== pokemon && !ally.fainted && pokemon.isAdjacent(ally)) {
+							targets.push(ally);
+						}
+					}
+				}
+			} else {
+				// Single target — use target passed in
+				if (_target && _target.isActive && !_target.fainted) {
+					targets.push(_target);
+				}
+			}
+	
+			// Boost all chosen targets
+			pokemon.m.cheapHeatTargets = new Map();
+			for (const t of targets) {
+				const targetBoost: SparseBoostsTable = {};
+				targetBoost[defensiveStat] = 1;
+				this.boost(targetBoost, t, pokemon, this.dex.abilities.get('Cheap Heat'));
+				pokemon.m.cheapHeatTargets.set(t, defensiveStat);
+			}
+		},
+	
+		onAfterMove(pokemon, _target, move) {
+			if (move.category === 'Status' || move.basePower <= 0) return;
+	
+			// Revert user's stat
+			const stat = pokemon.m.cheapHeatSelfBoosted;
+			if (stat) {
+				const debuff: SparseBoostsTable = {};
+				debuff[stat as keyof BoostsTable] = -1;
+				this.boost(debuff, pokemon, pokemon, this.dex.abilities.get('Cheap Heat'));
+				pokemon.m.cheapHeatSelfBoosted = null;
+			}
+	
+			// Revert all targets' stat boosts
+			if (pokemon.m.cheapHeatTargets) {
+				for (const [t, boostedStat] of pokemon.m.cheapHeatTargets.entries()) {
+					if (!t?.isActive) continue;
+					const revert: SparseBoostsTable = {};
+					revert[boostedStat as keyof BoostsTable] = -1;
+					this.boost(revert, t, pokemon, this.dex.abilities.get('Cheap Heat'));
+				}
+				pokemon.m.cheapHeatTargets.clear();
+			}
+		},
 	},
 	staccato: {
 		desc: "If this Pokémon cures an opposing Pokémon's non-volatile status condition, the affected Pokémon will be paralyzed.",
@@ -2598,7 +2761,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	badinfluence: {
 		shortDesc: "If this Pokémon has a stat stage lowered, all Pokémon on the field have the same stat stage lowered.",
-		onBoost(boost, target, source, effect) {
+		onTryBoost(boost, target, source, effect) {
 			if (!boost || effect.id === 'mirrorarmor' || effect.id === 'badinfluence') return;
 			let b: BoostName;
 			const negativeBoost: SparseBoostsTable = {};

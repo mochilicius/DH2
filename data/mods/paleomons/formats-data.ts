@@ -231,10 +231,6 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
-	eleffigyzen: {
-		tier: "Paleomons",
-		doublesTier: "Daleomons",
-	},
 	icaruff: {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
@@ -243,5 +239,44 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
-
+	swampertancient: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	bellibolttwisted: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	salazzleancient: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	nurturaptor: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	hemlophosaur: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	carriguana: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	nymphamane: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	combysa: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	magnestone: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	nochummer: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
 };
